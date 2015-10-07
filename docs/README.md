@@ -51,8 +51,8 @@ specified, valid values are `true` or `false`. When defined and the value is `tr
 the `/etc/sudoers` file, the user will not need to provide a password when privileges need to be elevated. If 
 defined and the value is `false` the user will be removed from the `/etc/sudoers` file.
 
-There's also another addition parameter `authorized_keys` where each key supports all parameters from the
-[authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
+There's one more additional parameter `authorized_keys` available, where each key supports all parameters
+from the [authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
 
 > The parameter `authorized_keys` is required and must be defined for every user in `account_users`
 even when no keys are required. In that case, simply set `authorized_keys` to `[]`.
