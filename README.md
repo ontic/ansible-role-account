@@ -1,7 +1,8 @@
-# Ontic Git ![Status](https://img.shields.io/badge/project-maintained-brightgreen.svg)
+# Ontic Account ![Status](https://img.shields.io/badge/project-maintained-brightgreen.svg)
 
 | Branch             | Build               | Galaxy              | Release              |
 | :----------------- | :------------------ | :------------------ | :------------------- |
+| **master**         | [![Build](https://img.shields.io/travis/ontic/ansible-role-account/master.svg)](https://travis-ci.org/ontic/ansible-role-account) | [![Galaxy](https://img.shields.io/badge/galaxy-ontic.account-blue.svg)](https://galaxy.ansible.com/list#/roles/5397) | [![Release](https://img.shields.io/github/release/ontic/ansible-role-account.svg)](https://github.com/ontic/ansible-role-account/releases) |
 
 ## Introduction
 
@@ -12,7 +13,6 @@ This role manages users and groups on RedHat/CentOS and Debian/Ubuntu Linux serv
 | Name                                                                                          | Version       |
 | :-------------------------------------------------------------------------------------------- | :------------ |
 None                                                                                            | N/A           |
-
 
 ## Installation
 
