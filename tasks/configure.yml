@@ -48,7 +48,7 @@
     force: '{{ item.force | default(omit) }}'
     generate_ssh_key: '{{ item.generate_ssh_key | default(omit) }}'
     group: '{{ item.group | default(item.name) }}'
-    groups: "{{ item.groups | join(',') if item.groups is defined else '' }}"
+    groups: "{{ item.groups | join(',') if item.groups is defined else omit }}"
     home: '{{ item.home | default(omit) }}'
     login_class: '{{ item.login_class | default(omit) }}'
     move_home: '{{ item.move_home | default(omit) }}'
