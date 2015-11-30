@@ -8,14 +8,14 @@ account_groups:
     system: yes
   - name: admin
     system: yes
-    sudoer: true
+    sudoer: yes
   - name: www-data
     system: yes
   - name: vagrant
 account_users:
   - name: vagrant
     createhome: yes
-    sudoer: true
+    sudoer: yes
     group: vagrant
     groups:
       - sudo
@@ -23,7 +23,7 @@ account_users:
     authorized_keys:
       - key: https://github.com/username.keys
   - name: johndoe
-    remove: true
+    remove: yes
     state: absent
 ```
 
@@ -37,9 +37,9 @@ account_groups: []
 
 The account groups you would like to manage. Each group supports all parameters from the
 [group](http://docs.ansible.com/ansible/user_module.html) module. An additional parameter `sudoer` can be
-specified, valid values are `true` or `false`. When defined and the value is `true` the group will be added to
+specified, valid values are `yes` or `no`. When defined and the value is `yes` the group will be added to
 the `/etc/sudoers` file, users belonging to that group will not need to provide a password when privileges need
-to be elevated. If defined and the value is `false` the group will be removed from the `/etc/sudoers` file.
+to be elevated. If defined and the value is `no` the group will be removed from the `/etc/sudoers` file.
 
 ```
 account_users: []
@@ -47,9 +47,9 @@ account_users: []
 
 The account users you would like to manage. Each user supports all parameters from the
 [user](http://docs.ansible.com/ansible/user_module.html) module. An additional parameter `sudoer` can be
-specified, valid values are `true` or `false`. When defined and the value is `true` the user will be added to
+specified, valid values are `yes` or `no`. When defined and the value is `yes` the user will be added to
 the `/etc/sudoers` file, the user will not need to provide a password when privileges need to be elevated. If 
-defined and the value is `false` the user will be removed from the `/etc/sudoers` file.
+defined and the value is `no` the user will be removed from the `/etc/sudoers` file.
 
 There's one more additional parameter `authorized_keys` available, where each key supports all parameters
 from the [authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
