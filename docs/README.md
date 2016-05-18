@@ -36,7 +36,7 @@ account_groups: []
 ```
 
 The account groups you would like to manage. Each group supports all parameters from the
-[group](http://docs.ansible.com/ansible/user_module.html) module. An additional parameter `sudoer` can be
+[group](http://docs.ansible.com/ansible/group_module.html) module. An additional parameter `sudoer` can be
 specified, valid values are `yes` or `no`. When defined and the value is `yes` the group will be added to
 the `/etc/sudoers` file, users belonging to that group will not need to provide a password when privileges need
 to be elevated. If defined and the value is `no` the group will be removed from the `/etc/sudoers` file.

@@ -3,42 +3,73 @@
 # through the world-wide-web at this URL: http://www.ontic.com.au/license.html
 # If you did not receive a copy of the license and are unable to obtain it through
 # the world-wide-web, please send an email to license@ontic.com.au immediately.
-# Copyright (c) 2010-2015 Ontic. (http://www.ontic.com.au). All rights reserved.
+# Copyright (c) 2010-2016 Ontic. (http://www.ontic.com.au). All rights reserved.
 
 ---
 
+
+- name: Account | Configure sudoers directory.
+  become: yes
+  file:
+    path: /etc/sudoers.d
+    state: directory
+    group: root
+    owner: root
+    mode: 0755
+
+- name: Account | Configure sudoers directory is scanned.
+  become: yes
+  lineinfile:
+    regexp: '#includedir\s+/etc/sudoers.d'
+    line: '#includedir /etc/sudoers.d'
+    dest: /etc/sudoers
+  tags:
+    - configure
+    - account
+
 - name: Account | Configure groups.
-  sudo: yes
+  become: yes
   group:
     name: '{{ item.name }}'
     gid: '{{ item.gid | default(omit) }}'
     state: '{{ item.state | default(omit) }}'
     system: '{{ item.system | default(omit) }}'
-  with_items: account_groups
+  with_items: '{{ account_groups }}'
   tags:
     - configure
     - account
 
-- name: Account | Configure sudo groups.
-  sudo: yes
+- name: Account | Configure present sudo groups.
+  become: yes
   lineinfile:
     regexp: '^%{{ item.name }}\s*ALL\='
-    line: '%{{ item.name }} ALL=(ALL) NOPASSWD:ALL'
-    dest: /etc/sudoers
+    line: '%{{ item.name }} ALL=(ALL:ALL) NOPASSWD:ALL'
+    dest: '/etc/sudoers.d/group_{{ item.name }}'
     create: true
     owner: root
     group: root
     mode: 0440
     state: "{{ item.sudoer | ternary('present', 'absent') }}"
     validate: 'visudo -cf %s'
-  with_items: account_groups
-  when: item.sudoer is defined
+  with_items: '{{ account_groups }}'
+  when: item.sudoer is defined and item.sudoer
+  tags:
+    - configure
+    - account
+
+- name: Account | Configure absent sudo groups.
+  become: yes
+  file:
+    path: '/etc/sudoers.d/group_{{ item.name }}'
+    state: absent
+  with_items: '{{ account_groups }}'
+  when: item.sudoer is not defined or not item.sudoer
   tags:
     - configure
     - account
 
 - name: Account | Configure users.
-  sudo: yes
+  become: yes
   user:
     name: '{{ item.name }}'
     append: '{{ item.append | default(omit) }}'
@@ -55,6 +86,7 @@
     non_unique: '{{ item.non_unique | default(omit) }}'
     password: '{{ item.password | default(omit) }}'
     remove: '{{ item.remove | default(omit) }}'
+    seuser: '{{ item.seuser | default(omit) }}'
     shell: '{{ item.shell | default(omit) }}'
     skeleton: '{{ item.skeleton | default(omit) }}'
     ssh_key_bits: '{{ item.ssh_key_bits | default(omit) }}'
@@ -66,41 +98,54 @@
     system: '{{ item.system | default(omit) }}'
     uid: '{{ item.uid | default(omit) }}'
     update_password: '{{ item.update_password | default(omit) }}'
-  with_items: account_users
+  with_items: '{{ account_users }}'
   tags:
     - configure
     - account
 
-- name: Account | Configure sudo users.
-  sudo: yes
+- name: Account | Configure present sudo users.
+  become: yes
   lineinfile:
     regexp: '^{{ item.name }}\s*ALL\='
-    line: '{{ item.name }} ALL=(ALL) NOPASSWD:ALL'
-    dest: /etc/sudoers
+    line: '{{ item.name }} ALL=(ALL:ALL) NOPASSWD:ALL'
+    dest: '/etc/sudoers.d/user_{{ item.name }}'
     create: true
     owner: root
     group: root
     mode: 0440
     state: "{{ item.sudoer | ternary('present', 'absent') }}"
     validate: 'visudo -cf %s'
-  with_items: account_users
-  when: item.sudoer is defined
+  with_items: '{{ account_users }}'
+  when: item.sudoer is defined and item.sudoer
+  tags:
+    - configure
+    - account
+
+- name: Account | Configure absent sudo users.
+  become: yes
+  file:
+    path: '/etc/sudoers.d/user_{{ item.name }}'
+    state: absent
+  with_items: '{{ account_users }}'
+  when: item.sudoer is not defined or not item.sudoer
   tags:
     - configure
     - account
 
 - name: Account | Configure authorized keys.
-  sudo: yes
+  become: yes
   authorized_key:
     user: '{{ item.0.name }}'
     exclusive: '{{ item.1.exclusive | default(omit) }}'
     key: '{{ item.1.key }}'
     key_options: '{{ item.1.key_options | default(omit) }}'
     manage_dir: '{{ item.1.manage_dir | default(omit) }}'
+    path: '{{ item.1.path | default(omit) }}'
     state: '{{ item.1.state | default(omit) }}'
+    validate_certs: '{{ item.1.validate_certs | default(yes) }}'
   with_subelements:
-    - account_users
-    - authorized_keys
+    - '{{ account_users }}'
+    - '{{ authorized_keys }}'
   tags:
     - configure
     - account
