@@ -53,6 +53,3 @@ defined and the value is `no` the user will be removed from the `/etc/sudoers` f
 
 There's one more additional parameter `authorized_keys` available, where each key supports all parameters
 from the [authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
-
-> The parameter `authorized_keys` is required and must be defined for every user in `account_users`
-even when no keys are required. In that case, simply set `authorized_keys` to `[]`.
