@@ -135,7 +135,7 @@
 - name: Account | Configure authorized keys.
   become: yes
   authorized_key:
-    user: '{{ item.0.name }}'
+    user: '{{ item.1.user | default(item.0.name) }}'
     exclusive: '{{ item.1.exclusive | default(omit) }}'
     key: '{{ item.1.key }}'
     key_options: '{{ item.1.key_options | default(omit) }}'
@@ -147,7 +147,7 @@
     - '{{ account_users }}'
     - authorized_keys
     - flags:
-      skip_missing: True
+      skip_missing: true
   tags:
     - configure
     - account
