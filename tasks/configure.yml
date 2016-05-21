@@ -23,8 +23,9 @@
     line: '#includedir /etc/sudoers.d'
     dest: /etc/sudoers
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure groups.
   become: yes
@@ -35,8 +36,9 @@
     system: '{{ item.system | default(omit) }}'
   with_items: '{{ account_groups }}'
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure present sudo groups.
   become: yes
@@ -53,8 +55,9 @@
   with_items: '{{ account_groups }}'
   when: item.sudoer is defined and item.sudoer
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure absent sudo groups.
   become: yes
@@ -64,8 +67,9 @@
   with_items: '{{ account_groups }}'
   when: item.sudoer is not defined or not item.sudoer
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure users.
   become: yes
@@ -99,8 +103,9 @@
     update_password: '{{ item.update_password | default(omit) }}'
   with_items: '{{ account_users }}'
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure present sudo users.
   become: yes
@@ -117,8 +122,9 @@
   with_items: '{{ account_users }}'
   when: item.sudoer is defined and item.sudoer
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure absent sudo users.
   become: yes
@@ -128,8 +134,9 @@
   with_items: '{{ account_users }}'
   when: item.sudoer is not defined or not item.sudoer
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
 
 - name: Account | Configure authorized keys.
   become: yes
@@ -148,5 +155,6 @@
     - flags:
       skip_missing: true
   tags:
-    - configure
     - account
+    - account-configure
+    - configure
