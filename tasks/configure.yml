@@ -22,10 +22,6 @@
     regexp: '#includedir\s+/etc/sudoers.d'
     line: '#includedir /etc/sudoers.d'
     dest: /etc/sudoers
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure groups.
   become: yes
@@ -35,10 +31,6 @@
     state: '{{ item.state | default(omit) }}'
     system: '{{ item.system | default(omit) }}'
   with_items: '{{ account_groups }}'
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure present sudo groups.
   become: yes
@@ -54,10 +46,6 @@
     validate: 'visudo -cf %s'
   with_items: '{{ account_groups }}'
   when: item.sudoer is defined and item.sudoer
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure absent sudo groups.
   become: yes
@@ -66,10 +54,6 @@
     state: absent
   with_items: '{{ account_groups }}'
   when: item.sudoer is not defined or not item.sudoer
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure users.
   become: yes
@@ -102,10 +86,6 @@
     uid: '{{ item.uid | default(omit) }}'
     update_password: '{{ item.update_password | default(omit) }}'
   with_items: '{{ account_users }}'
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure present sudo users.
   become: yes
@@ -121,10 +101,6 @@
     validate: 'visudo -cf %s'
   with_items: '{{ account_users }}'
   when: item.sudoer is defined and item.sudoer
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure absent sudo users.
   become: yes
@@ -133,10 +109,6 @@
     state: absent
   with_items: '{{ account_users }}'
   when: item.sudoer is not defined or not item.sudoer
-  tags:
-    - account
-    - account-configure
-    - configure
 
 - name: Account | Configure authorized keys.
   become: yes
@@ -154,7 +126,3 @@
     - authorized_keys
     - flags:
       skip_missing: true
-  tags:
-    - account
-    - account-configure
-    - configure
