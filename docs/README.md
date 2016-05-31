@@ -22,6 +22,10 @@ account_users:
       - www-data
     authorized_keys:
       - key: https://github.com/username.keys
+    files:
+      - path: '.ssh'
+        mode: '0700'
+        state: directory
   - name: johndoe
     remove: yes
     state: absent
@@ -51,5 +55,15 @@ specified, valid values are `yes` or `no`. When defined and the value is `yes` t
 the `/etc/sudoers` file, the user will not need to provide a password when privileges need to be elevated. If 
 defined and the value is `no` the user will be removed from the `/etc/sudoers` file.
 
-There's one more additional parameter `authorized_keys` available, where each key supports all parameters
-from the [authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
+There's also additional parameters which are basically wrappers around other modules. The only
+difference being that the `path` and `dest` properties are restricted to the users home directory. When
+specifying either the `path` or `dest` properties, they should be relative. Also note that in most cases
+you won't need to specify `group` or `owner` properties as these are inherited from the `user`.
+
+* `authorized_keys` supports all parameters from the [authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
+* `files` supports all parameters from the [file](http://docs.ansible.com/ansible/file_module.html) module.
+* `copies` supports all parameters from the [copy](http://docs.ansible.com/ansible/copy_module.html) module.
+* `repositories` supports all parameters from the [git](http://docs.ansible.com/ansible/git_module.html) module.
+
+The purpose of these wrappers is to carry out general tasks such as making sure a directory or file
+exists, immediately after creating an account.

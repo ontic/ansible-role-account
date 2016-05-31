@@ -113,16 +113,90 @@
 - name: Account | Configure authorized keys.
   become: yes
   authorized_key:
-    user: '{{ item.1.user | default(item.0.name) }}'
+    user: '{{ item.0.name }}'
     exclusive: '{{ item.1.exclusive | default(omit) }}'
     key: '{{ item.1.key }}'
     key_options: '{{ item.1.key_options | default(omit) }}'
     manage_dir: '{{ item.1.manage_dir | default(omit) }}'
     path: '{{ item.1.path | default(omit) }}'
     state: '{{ item.1.state | default(omit) }}'
-    validate_certs: '{{ item.1.validate_certs | default(yes) }}'
+    validate_certs: '{{ item.1.validate_certs | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
     - authorized_keys
+    - flags:
+      skip_missing: true
+
+- name: Account | Configure files.
+  become: yes
+  file:
+    follow: '{{ item.1.follow | default(omit) }}'
+    force: '{{ item.1.force | default(omit) }}'
+    group: '{{ item.1.group | default(item.0.group) }}'
+    mode: '{{ item.1.mode | default(omit) }}'
+    owner: '{{ item.1.owner | default(item.0.name) }}'
+    path: '/home/{{ item.0.name }}/{{ item.path }}'
+    recurse: '{{ item.1.recurse | default(omit) }}'
+    selevel: '{{ item.1.selevel | default(omit) }}'
+    serole: '{{ item.1.serole | default(omit) }}'
+    setype: '{{ item.1.setype | default(omit) }}'
+    seuser: '{{ item.1.seuser | default(omit) }}'
+    src: '{{ item.1.src | default(omit) }}'
+    state: '{{ item.1.state | default(omit) }}'
+  with_subelements:
+    - '{{ account_users }}'
+    - files
+    - flags:
+      skip_missing: true
+
+- name: Account | Configure copies.
+  become: yes
+  copy:
+    backup: '{{ item.1.backup | default(omit) }}'
+    content: '{{ item.1.content | default(omit) }}'
+    dest: '/home/{{ item.0.name }}/{{ item.dest }}'
+    directory_mode: '{{ item.1.directory_mode | default(omit) }}'
+    follow: '{{ item.1.follow | default(omit) }}'
+    force: '{{ item.1.force | default(omit) }}'
+    group: '{{ item.1.group | default(item.0.group) }}'
+    mode: '{{ item.1.mode | default(omit) }}'
+    owner: '{{ item.1.owner | default(item.0.name) }}'
+    remote_src: '{{ item.1.remote_src | default(omit) }}'
+    selevel: '{{ item.1.selevel | default(omit) }}'
+    serole: '{{ item.1.serole | default(omit) }}'
+    setype: '{{ item.1.setype | default(omit) }}'
+    seuser: '{{ item.1.seuser | default(omit) }}'
+    src: '{{ item.1.src | default(omit) }}'
+    validate: '{{ item.1.validate | default(omit) }}'
+  with_subelements:
+    - '{{ account_users }}'
+    - copies
+    - flags:
+      skip_missing: true
+
+- name: Account | Configure repositories.
+  become: yes
+  git:
+    accept_hostkey: '{{ item.1.accept_hostkey | default(omit) }}'
+    bare: '{{ item.1.bare | default(omit) }}'
+    clone: '{{ item.1.clone | default(omit) }}'
+    depth: '{{ item.1.depth | default(omit) }}'
+    dest: '/home/{{ item.0.name }}/{{ item.dest }}'
+    executable: '{{ item.1.executable | default(omit) }}'
+    force: '{{ item.1.force | default(omit) }}'
+    key_file: '{{ item.1.key_file | default(omit) }}'
+    recursive: '{{ item.1.recursive | default(omit) }}'
+    reference: '{{ item.1.reference | default(omit) }}'
+    refspec: '{{ item.1.refspec | default(omit) }}'
+    remote: '{{ item.1.remote | default(omit) }}'
+    repo: '{{ item.1.repo }}'
+    ssh_opts: '{{ item.1.ssh_opts | default(omit) }}'
+    track_submodules: '{{ item.1.track_submodules | default(omit) }}'
+    update: '{{ item.1.update | default(omit) }}'
+    verify_commit: '{{ item.1.verify_commit | default(omit) }}'
+    version: '{{ item.1.version | default(omit) }}'
+  with_subelements:
+    - '{{ account_users }}'
+    - repositories
     - flags:
       skip_missing: true
