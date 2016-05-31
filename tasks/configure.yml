@@ -192,7 +192,7 @@
     repo: '{{ item.1.repo }}'
     ssh_opts: '{{ item.1.ssh_opts | default(omit) }}'
     track_submodules: '{{ item.1.track_submodules | default(omit) }}'
-    update: '{{ item.1.update | default(omit) }}'
+    update: true
     verify_commit: '{{ item.1.verify_commit | default(omit) }}'
     version: '{{ item.1.version | default(omit) }}'
   with_subelements:
