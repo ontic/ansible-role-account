@@ -201,3 +201,23 @@
     - repositories
     - flags:
       skip_missing: true
+
+- name: Account | Configure composer.
+  become: yes
+  become_user: '{{ item.1.become_user | default(omit) }}'
+  composer:
+    arguments: '{{ item.1.arguments | default(omit) }}'
+    command: '{{ item.1.command | default(omit) }}'
+    ignore_platform_reqs: '{{ item.1.ignore_platform_reqs | default(omit) }}'
+    no_dev: '{{ item.1.no_dev | default(omit) }}'
+    no_plugins: '{{ item.1.no_plugins | default(omit) }}'
+    no_scripts: '{{ item.1.no_scripts | default(omit) }}'
+    optimize_autoloader: '{{ item.1.optimize_autoloader | default(omit) }}'
+    prefer_dist: '{{ item.1.prefer_dist | default(omit) }}'
+    prefer_source: '{{ item.1.prefer_source | default(omit) }}'
+    working_dir: '/home/{{ item.0.name }}/{{ item.1.working_dir }}'
+  with_subelements:
+    - '{{ account_users }}'
+    - composers
+    - flags:
+      skip_missing: true

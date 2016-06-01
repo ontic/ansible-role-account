@@ -64,6 +64,7 @@ you won't need to specify `group` or `owner` properties as these are inherited f
 * `files` supports all parameters from the [file](http://docs.ansible.com/ansible/file_module.html) module.
 * `copies` supports all parameters from the [copy](http://docs.ansible.com/ansible/copy_module.html) module.
 * `repositories` supports all parameters from the [git](http://docs.ansible.com/ansible/git_module.html) module.
+* `composers` supports all parameters from the [composer](http://docs.ansible.com/ansible/composer_module.html) module.
 
 The purpose of these wrappers is to carry out general tasks such as making sure a directory or file
 exists, immediately after creating an account.
