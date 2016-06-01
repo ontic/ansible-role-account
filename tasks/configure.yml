@@ -176,6 +176,7 @@
 
 - name: Account | Configure repositories.
   become: yes
+  become_user: '{{ item.1.become_user | default(omit) }}'
   git:
     accept_hostkey: '{{ item.1.accept_hostkey | default(omit) }}'
     bare: '{{ item.1.bare | default(omit) }}'
