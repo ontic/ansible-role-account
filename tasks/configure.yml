@@ -7,23 +7,23 @@
 
 ---
 
-- name: Account | Configure sudoers directory.
+- name: 'Account | Configure sudoers directory.'
   become: yes
   file:
-    path: /etc/sudoers.d
-    state: directory
-    group: root
-    owner: root
-    mode: 0755
+    path: '/etc/sudoers.d'
+    state: 'directory'
+    group: 'root'
+    owner: 'root'
+    mode: '0755'
 
-- name: Account | Configure sudoers directory is scanned.
+- name: 'Account | Configure sudoers directory is scanned.'
   become: yes
   lineinfile:
     regexp: '#includedir\s+/etc/sudoers.d'
     line: '#includedir /etc/sudoers.d'
-    dest: /etc/sudoers
+    dest: '/etc/sudoers'
 
-- name: Account | Configure groups.
+- name: 'Account | Configure groups.'
   become: yes
   group:
     name: '{{ item.name }}'
@@ -32,30 +32,30 @@
     system: '{{ item.system | default(omit) }}'
   with_items: '{{ account_groups }}'
 
-- name: Account | Configure present sudo groups.
+- name: 'Account | Configure present sudo groups.'
   become: yes
   lineinfile:
     regexp: '^%{{ item.name }}\s*ALL\='
     line: '%{{ item.name }} ALL=(ALL:ALL) NOPASSWD:ALL'
     dest: '/etc/sudoers.d/group_{{ item.name }}'
-    create: true
-    owner: root
-    group: root
-    mode: 0440
-    state: "{{ item.sudoer | ternary('present', 'absent') }}"
+    create: yes
+    owner: 'root'
+    group: 'root'
+    mode: '0440'
+    state: '{{ item.sudoer | ternary("present", "absent") }}'
     validate: 'visudo -cf %s'
   with_items: '{{ account_groups }}'
-  when: item.sudoer is defined and item.sudoer
+  when: '{{ item.sudoer is defined and item.sudoer }}'
 
-- name: Account | Configure absent sudo groups.
+- name: 'Account | Configure absent sudo groups.'
   become: yes
   file:
     path: '/etc/sudoers.d/group_{{ item.name }}'
-    state: absent
+    state: 'absent'
   with_items: '{{ account_groups }}'
-  when: item.sudoer is not defined or not item.sudoer
+  when: '{{ item.sudoer is not defined or not item.sudoer }}'
 
-- name: Account | Configure users.
+- name: 'Account | Configure users.'
   become: yes
   user:
     name: '{{ item.name }}'
@@ -87,30 +87,30 @@
     update_password: '{{ item.update_password | default(omit) }}'
   with_items: '{{ account_users }}'
 
-- name: Account | Configure present sudo users.
+- name: 'Account | Configure present sudo users.'
   become: yes
   lineinfile:
     regexp: '^{{ item.name }}\s*ALL\='
     line: '{{ item.name }} ALL=(ALL:ALL) NOPASSWD:ALL'
     dest: '/etc/sudoers.d/user_{{ item.name }}'
-    create: true
-    owner: root
-    group: root
-    mode: 0440
-    state: "{{ item.sudoer | ternary('present', 'absent') }}"
+    create: yes
+    owner: 'root'
+    group: 'root'
+    mode: '0440'
+    state: '{{ item.sudoer | ternary("present", "absent") }}'
     validate: 'visudo -cf %s'
   with_items: '{{ account_users }}'
-  when: item.sudoer is defined and item.sudoer
+  when: '{{ item.sudoer is defined and item.sudoer }}'
 
-- name: Account | Configure absent sudo users.
+- name: 'Account | Configure absent sudo users.'
   become: yes
   file:
     path: '/etc/sudoers.d/user_{{ item.name }}'
-    state: absent
+    state: 'absent'
   with_items: '{{ account_users }}'
-  when: item.sudoer is not defined or not item.sudoer
+  when: '{{ item.sudoer is not defined or not item.sudoer }}'
 
-- name: Account | Configure authorized keys.
+- name: 'Account | Configure authorized keys.'
   become: yes
   authorized_key:
     user: '{{ item.0.name }}'
@@ -123,11 +123,11 @@
     validate_certs: '{{ item.1.validate_certs | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
-    - authorized_keys
+    - 'authorized_keys'
     - flags:
-      skip_missing: true
+        skip_missing: yes
 
-- name: Account | Configure files.
+- name: 'Account | Configure files.'
   become: yes
   file:
     follow: '{{ item.1.follow | default(omit) }}'
@@ -145,11 +145,11 @@
     state: '{{ item.1.state | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
-    - files
+    - 'files'
     - flags:
-      skip_missing: true
+        skip_missing: yes
 
-- name: Account | Configure copies.
+- name: 'Account | Configure copies.'
   become: yes
   copy:
     backup: '{{ item.1.backup | default(omit) }}'
@@ -170,11 +170,11 @@
     validate: '{{ item.1.validate | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
-    - copies
+    - 'copies'
     - flags:
-      skip_missing: true
+        skip_missing: yes
 
-- name: Account | Configure repositories.
+- name: 'Account | Configure repositories.'
   become: yes
   become_user: '{{ item.1.become_user | default(omit) }}'
   git:
@@ -193,16 +193,16 @@
     repo: '{{ item.1.repo }}'
     ssh_opts: '{{ item.1.ssh_opts | default(omit) }}'
     track_submodules: '{{ item.1.track_submodules | default(omit) }}'
-    update: true
+    update: yes
     verify_commit: '{{ item.1.verify_commit | default(omit) }}'
     version: '{{ item.1.version | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
-    - repositories
+    - 'repositories'
     - flags:
-      skip_missing: true
+        skip_missing: yes
 
-- name: Account | Configure composer.
+- name: 'Account | Configure composer.'
   become: yes
   become_user: '{{ item.1.become_user | default(omit) }}'
   composer:
@@ -218,6 +218,6 @@
     working_dir: '/home/{{ item.0.name }}/{{ item.1.working_dir }}'
   with_subelements:
     - '{{ account_users }}'
-    - composers
+    - 'composers'
     - flags:
-      skip_missing: true
+        skip_missing: yes

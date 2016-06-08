@@ -7,8 +7,8 @@
 
 ---
 
-- include: configure.yml
+- include: 'configure.yml'
   tags:
-    - account
-    - account-configure
-    - configure
+    - 'account'
+    - 'account-configure'
+    - 'configure'
