@@ -22,6 +22,7 @@
     regexp: '#includedir\s+/etc/sudoers.d'
     line: '#includedir /etc/sudoers.d'
     dest: '/etc/sudoers'
+    create: yes
 
 - name: 'Account | Configure groups.'
   become: yes
