@@ -129,7 +129,7 @@
     - '{{ account_users }}'
     - 'authorized_keys'
     - flags:
-        skip_missing: yes
+        skip_missing: true
 
 - name: 'Account | Configure files.'
   become: yes
@@ -151,7 +151,7 @@
     - '{{ account_users }}'
     - 'files'
     - flags:
-        skip_missing: yes
+        skip_missing: true
 
 - name: 'Account | Configure copies.'
   become: yes
@@ -176,7 +176,7 @@
     - '{{ account_users }}'
     - 'copies'
     - flags:
-        skip_missing: yes
+        skip_missing: true
 
 - name: 'Account | Configure repositories.'
   become: yes
@@ -204,7 +204,7 @@
     - '{{ account_users }}'
     - 'repositories'
     - flags:
-        skip_missing: yes
+        skip_missing: true
 
 - name: 'Account | Configure composer.'
   become: yes
@@ -224,4 +224,4 @@
     - '{{ account_users }}'
     - 'composers'
     - flags:
-        skip_missing: yes
+        skip_missing: true
