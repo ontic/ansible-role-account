@@ -166,13 +166,10 @@
 
 - name: 'Account | Configure known hosts aliases.'
   become: yes
-  lineinfile:
-    create: yes
-    backrefs: yes
+  replace:
     dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
-    line: '{{ item.1.host }},{{ item.1.aliases }} {{ item.1.enctype }} \1'
-    regexp: '^{{ item.1.host | regex_escape() }} {{ item.1.enctype }} (.*)$'
-    state: '{{ item.1.state | default(omit) }}'
+    regexp: '^{{ item.1.host | regex_escape() }}[\s]{{ item.1.enctype }}'
+    replace: '{{ item.1.host }},{{ item.1.aliases }} {{ item.1.enctype }}'
     group: '{{ item.0.name }}'
     owner: '{{ item.0.name }}'
     mode: '0644'
