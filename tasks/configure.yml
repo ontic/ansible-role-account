@@ -144,6 +144,25 @@
     - 'known_hosts'
     - flags:
       skip_missing: yes
+  when: '{{ item.1.keyscan is not defined or item.1.keyscan == false }}'
+
+- name: 'Account | Configure known hosts using keyscan.'
+  become: yes
+  lineinfile:
+    create: yes
+    dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
+    line: '{{ lookup("pipe", "ssh-keyscan -t " + item.1.enctype + " " + item.1.host) }}'
+    regexp: '^{{ item.1.host | regex_escape() }}'
+    state: '{{ item.1.state | default(omit) }}'
+    group: '{{ item.0.name }}'
+    owner: '{{ item.0.name }}'
+    mode: '0644'
+  with_subelements:
+    - '{{ account_users }}'
+    - 'known_hosts'
+    - flags:
+      skip_missing: yes
+  when: '{{ item.1.keyscan is defined and item.1.keyscan == true }}'
 
 - name: 'Account | Configure files.'
   become: yes
