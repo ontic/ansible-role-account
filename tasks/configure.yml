@@ -164,6 +164,22 @@
       skip_missing: yes
   when: '{{ item.1.keyscan is defined and item.1.keyscan == true }}'
 
+- name: 'Account | Configure known hosts aliases.'
+  become: yes
+  replace:
+    dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
+    regexp: '^{{ item.1.host | regex_escape() }}(.*)$'
+    replace: '{{ item.1.host }},{{ item.1.aliases }}\1'
+    group: '{{ item.0.name }}'
+    owner: '{{ item.0.name }}'
+    mode: '0644'
+  with_subelements:
+    - '{{ account_users }}'
+    - 'known_hosts'
+    - flags:
+      skip_missing: yes
+  when: '{{ item.1.keyscan is defined and item.1.keyscan == true and item.1.aliases is defined }}'
+
 - name: 'Account | Configure files.'
   become: yes
   file:
