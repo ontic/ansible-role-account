@@ -133,6 +133,7 @@
 
 - name: 'Account | Configure known hosts.'
   become: yes
+  become_user: '{{ item.0.name }}'
   known_hosts:
     path: '/home/{{ item.0.name }}/.ssh/known_hosts'
     key: '{{ item.1.key | default(omit) }}'

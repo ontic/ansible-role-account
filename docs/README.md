@@ -23,7 +23,7 @@ account_users:
     authorized_keys:
       - key: 'https://github.com/username.keys'
     known_hosts:
-      - key: 'someone.com ssh-rsa {{ lookup("file", "account/someone/id_rsa.pub") }}'
+      - key: 'someone.com {{ lookup("file", "account/someone/id_rsa.pub") }}'
     files:
       - path: '.ssh'
         mode: '0700'
