@@ -131,6 +131,19 @@
     - flags:
       skip_missing: yes
 
+- name: 'Account | Configure known hosts.'
+  become: yes
+  known_hosts:
+    path: '/home/{{ item.0.name }}/.ssh/known_hosts'
+    key: '{{ item.1.key | default(omit) }}'
+    name: '{{ item.1.name }}'
+    state: '{{ item.1.state | default(omit) }}'
+  with_subelements:
+    - '{{ account_users }}'
+    - 'known_hosts'
+    - flags:
+      skip_missing: yes
+
 - name: 'Account | Configure files.'
   become: yes
   file:

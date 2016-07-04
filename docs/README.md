@@ -4,31 +4,33 @@
 
 ```
 account_groups:
-  - name: sudo
+  - name: 'sudo'
     system: yes
-  - name: admin
+  - name: 'admin'
     system: yes
     sudoer: yes
-  - name: www-data
+  - name: 'www-data'
     system: yes
-  - name: vagrant
+  - name: 'vagrant'
 account_users:
-  - name: vagrant
+  - name: 'vagrant'
     createhome: yes
     sudoer: yes
-    group: vagrant
+    group: 'vagrant'
     groups:
-      - sudo
-      - www-data
+      - 'sudo'
+      - 'www-data'
     authorized_keys:
-      - key: https://github.com/username.keys
+      - key: 'https://github.com/username.keys'
+    known_hosts:
+      - key: 'someone.com ssh-rsa {{ lookup("file", "account/someone/id_rsa.pub") }}'
     files:
       - path: '.ssh'
         mode: '0700'
-        state: directory
-  - name: johndoe
+        state: 'directory'
+  - name: 'johndoe'
     remove: yes
-    state: absent
+    state: 'absent'
 ```
 
 ## Role Variables
@@ -61,6 +63,7 @@ specifying either the `path` or `dest` properties, they should be relative. Also
 you won't need to specify `group` or `owner` properties as these are inherited from the `user`.
 
 * `authorized_keys` supports all parameters from the [authorized_key](http://docs.ansible.com/ansible/authorized_key_module.html) module.
+* `known_hosts` supports all parameters from the [known_hosts](http://docs.ansible.com/ansible/known_hosts_module.html) module.
 * `files` supports all parameters from the [file](http://docs.ansible.com/ansible/file_module.html) module.
 * `copies` supports all parameters from the [copy](http://docs.ansible.com/ansible/copy_module.html) module.
 * `repositories` supports all parameters from the [git](http://docs.ansible.com/ansible/git_module.html) module.
