@@ -131,20 +131,6 @@
     - flags:
       skip_missing: yes
 
-- name: 'Account | Configure existance and ownership of known hosts file.'
-  become: yes
-  file:
-    path: '/home/{{ item.0.name }}/.ssh/known_hosts'
-    state: 'touch'
-    group: '{{ item.0.name }}'
-    owner: '{{ item.0.name }}'
-    mode: '0644'
-  with_subelements:
-    - '{{ account_users }}'
-    - 'known_hosts'
-    - flags:
-      skip_missing: yes
-
 - name: 'Account | Configure known hosts.'
   become: yes
   become_user: '{{ item.0.name }}'
