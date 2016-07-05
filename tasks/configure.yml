@@ -131,6 +131,20 @@
     - flags:
       skip_missing: yes
 
+- name: 'Account | Configure existance and ownership of known hosts file.'
+  become: yes
+  file:
+    path: '/home/{{ item.0.name }}/.ssh/known_hosts'
+    state: 'touch'
+    group: '{{ item.0.name }}'
+    owner: '{{ item.0.name }}'
+    mode: '0644'
+  with_subelements:
+    - '{{ account_users }}'
+    - 'known_hosts'
+    - flags:
+      skip_missing: yes
+
 - name: 'Account | Configure known hosts.'
   become: yes
   become_user: '{{ item.0.name }}'
@@ -144,41 +158,6 @@
     - 'known_hosts'
     - flags:
       skip_missing: yes
-  when: '{{ item.1.keyscan is not defined or item.1.keyscan == false }}'
-
-- name: 'Account | Configure known hosts using keyscan.'
-  become: yes
-  lineinfile:
-    create: yes
-    dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
-    line: '{{ lookup("pipe", "ssh-keyscan -t " + item.1.enctype + " " + item.1.host) }}'
-    regexp: '^{{ item.1.host | regex_escape() }}'
-    state: '{{ item.1.state | default(omit) }}'
-    group: '{{ item.0.name }}'
-    owner: '{{ item.0.name }}'
-    mode: '0644'
-  with_subelements:
-    - '{{ account_users }}'
-    - 'known_hosts'
-    - flags:
-      skip_missing: yes
-  when: '{{ item.1.keyscan is defined and item.1.keyscan == true }}'
-
-- name: 'Account | Configure known hosts aliases.'
-  become: yes
-  replace:
-    dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
-    regexp: '^({{ item.1.host | regex_escape() }}) ({{ item.1.enctype }}) (.*)$'
-    replace: '\1,{{ item.1.aliases }} \2\3'
-    group: '{{ item.0.name }}'
-    owner: '{{ item.0.name }}'
-    mode: '0644'
-  with_subelements:
-    - '{{ account_users }}'
-    - 'known_hosts'
-    - flags:
-      skip_missing: yes
-  when: '{{ item.1.keyscan is defined and item.1.keyscan == true and item.1.aliases is defined }}'
 
 - name: 'Account | Configure files.'
   become: yes
