@@ -152,7 +152,7 @@
     create: yes
     dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
     line: '{{ lookup("pipe", "ssh-keyscan -t " + item.1.enctype + " " + item.1.host) }}'
-    regexp: '^{{ item.1.host | regex_escape() }}'
+    regexp: '^{{ item.1.host | regex_escape() }} {{ item.1.enctype }}'
     state: '{{ item.1.state | default(omit) }}'
     group: '{{ item.0.name }}'
     owner: '{{ item.0.name }}'
@@ -168,8 +168,8 @@
   become: yes
   replace:
     dest: '/home/{{ item.0.name }}/.ssh/known_hosts'
-    regexp: '{{ "^" + item.1.host | regex_escape() + item.1.enctype }}'
-    replace: '{{ item.1.host }},{{ item.1.aliases }} {{ item.1.enctype }}'
+    regexp: '^{{ item.1.host | regex_escape() }} {{ item.1.enctype }} (.*)$'
+    replace: '{{ item.1.host }},{{ item.1.aliases }} {{ item.1.enctype }} \1'
     group: '{{ item.0.name }}'
     owner: '{{ item.0.name }}'
     mode: '0644'
