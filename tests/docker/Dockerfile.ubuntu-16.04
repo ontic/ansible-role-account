@@ -1,6 +1,7 @@
 FROM ubuntu:16.04
 RUN apt-get update
 
+RUN apt install -y software-properties-common git
 RUN apt-add-repository -y ppa:ansible/ansible
 RUN apt -y update && apt -y install ansible
 
