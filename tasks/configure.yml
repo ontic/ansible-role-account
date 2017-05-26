@@ -49,7 +49,7 @@
     state: '{{ item.sudoer | ternary("present", "absent") }}'
     validate: 'visudo -cf %s'
   with_items: '{{ account_groups }}'
-  when: '{{ item.sudoer is defined and item.sudoer }}'
+  when: 'item.sudoer is defined and item.sudoer'
 
 - name: 'Account | Configure absent sudo groups.'
   become: yes
@@ -57,7 +57,7 @@
     path: '/etc/sudoers.d/group_{{ item.name }}'
     state: 'absent'
   with_items: '{{ account_groups }}'
-  when: '{{ item.sudoer is not defined or not item.sudoer }}'
+  when: 'item.sudoer is not defined or not item.sudoer'
 
 - name: 'Account | Configure users.'
   become: yes
@@ -104,7 +104,7 @@
     state: '{{ item.sudoer | ternary("present", "absent") }}'
     validate: 'visudo -cf %s'
   with_items: '{{ account_users }}'
-  when: '{{ item.sudoer is defined and item.sudoer }}'
+  when: 'item.sudoer is defined and item.sudoer'
 
 - name: 'Account | Configure absent sudo users.'
   become: yes
@@ -112,7 +112,7 @@
     path: '/etc/sudoers.d/user_{{ item.name }}'
     state: 'absent'
   with_items: '{{ account_users }}'
-  when: '{{ item.sudoer is not defined or not item.sudoer }}'
+  when: 'item.sudoer is not defined or not item.sudoer'
 
 - name: 'Account | Configure authorized keys.'
   become: yes
