@@ -7,7 +7,7 @@
   vars:
     account_groups:
       - name: 'administrator'
-        guid: '1333'
+        gid: '1333'
     account_users:
       - name: 'adam'
         group: 'administrator'
