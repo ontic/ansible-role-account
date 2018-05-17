@@ -173,7 +173,7 @@
   no_log: '{{ item.0.no_log | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
-    - 'templates'
+    - 'files'
     - flags:
       skip_missing: yes
 
