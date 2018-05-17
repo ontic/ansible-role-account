@@ -154,7 +154,7 @@
 
 - name: 'Account | Configure files.'
   become: yes
-  files:
+  file:
     attributes : '{{ item.1.attributes | default(omit) }}'
     follow: '{{ item.1.follow | default(omit) }}'
     force: '{{ item.1.force | default(omit) }}'
