@@ -28,6 +28,13 @@ account_users:
       - path: '.ssh'
         mode: '0700'
         state: 'directory'
+      - path: 'utilities'
+        mode: '0755'
+        state: 'directory'
+    templates:
+      - src: 'backup.sh.j2'
+        dest: 'utilities/backup.sh'
+        mode: '0644'
   - name: 'johndoe'
     remove: yes
     state: 'absent'
@@ -71,6 +78,7 @@ you won't need to specify `group` or `owner` properties as these are inherited f
 * `known_hosts` supports all parameters from the [known_hosts](http://docs.ansible.com/ansible/known_hosts_module.html) module.
 * `files` supports all parameters from the [file](http://docs.ansible.com/ansible/file_module.html) module.
 * `copies` supports all parameters from the [copy](http://docs.ansible.com/ansible/copy_module.html) module.
+* `templates` supports all parameters from the [template](http://docs.ansible.com/ansible/template_module.html) module.
 * `repositories` supports all parameters from the [git](http://docs.ansible.com/ansible/git_module.html) module.
 * `composers` supports all parameters from the [composer](http://docs.ansible.com/ansible/composer_module.html) module.
 

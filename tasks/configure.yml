@@ -71,6 +71,7 @@
     group: '{{ item.group | default(item.name) }}'
     groups: "{{ item.groups | join(',') if item.groups is defined else omit }}"
     home: '{{ item.home | default(omit) }}'
+    local: '{{ item.local | default(omit) }}'
     login_class: '{{ item.login_class | default(omit) }}'
     move_home: '{{ item.move_home | default(omit) }}'
     non_unique: '{{ item.non_unique | default(omit) }}'
@@ -119,6 +120,7 @@
 - name: 'Account | Configure authorized keys.'
   become: yes
   authorized_key:
+    comment: '{{ item.1.comment | default(omit) }}'
     user: '{{ item.0.name }}'
     exclusive: '{{ item.1.exclusive | default(omit) }}'
     key: '{{ item.1.key }}'
@@ -138,6 +140,7 @@
   become: yes
   become_user: '{{ item.0.name }}'
   known_hosts:
+    hash_host: '{{ item.1.hash_host | default(omit) }}'
     path: '/home/{{ item.0.name }}/.ssh/known_hosts'
     key: '{{ item.1.key | default(omit) }}'
     name: '{{ item.1.name }}'
@@ -151,7 +154,8 @@
 
 - name: 'Account | Configure files.'
   become: yes
-  file:
+  template:
+    attributes : '{{ item.1.attributes | default(omit) }}'
     follow: '{{ item.1.follow | default(omit) }}'
     force: '{{ item.1.force | default(omit) }}'
     group: '{{ item.1.group | default(item.0.group) }}'
@@ -163,25 +167,29 @@
     serole: '{{ item.1.serole | default(omit) }}'
     setype: '{{ item.1.setype | default(omit) }}'
     seuser: '{{ item.1.seuser | default(omit) }}'
-    src: '{{ item.1.src | default(omit) }}'
+    src: '{{ item.1.src }}'
     state: '{{ item.1.state | default(omit) }}'
+    unsafe_writes: '{{ item.1.unsafe_writes | default(omit) }}'
   no_log: '{{ item.0.no_log | default(omit) }}'
   with_subelements:
     - '{{ account_users }}'
-    - 'files'
+    - 'templates'
     - flags:
       skip_missing: yes
 
 - name: 'Account | Configure copies.'
   become: yes
   copy:
+    attributes : '{{ item.1.attributes | default(omit) }}'
     backup: '{{ item.1.backup | default(omit) }}'
     content: '{{ item.1.content | default(omit) }}'
+    decrypt : '{{ item.1.decrypt | default(omit) }}'
     dest: '/home/{{ item.0.name }}/{{ item.1.dest }}'
     directory_mode: '{{ item.1.directory_mode | default(omit) }}'
     follow: '{{ item.1.follow | default(omit) }}'
     force: '{{ item.1.force | default(omit) }}'
     group: '{{ item.1.group | default(item.0.group) }}'
+    local_follow: '{{ item.1.local_follow | default(omit) }}'
     mode: '{{ item.1.mode | default(omit) }}'
     owner: '{{ item.1.owner | default(item.0.name) }}'
     remote_src: '{{ item.1.remote_src | default(omit) }}'
@@ -190,6 +198,7 @@
     setype: '{{ item.1.setype | default(omit) }}'
     seuser: '{{ item.1.seuser | default(omit) }}'
     src: '{{ item.1.src | default(omit) }}'
+    unsafe_writes: '{{ item.1.unsafe_writes | default(omit) }}'
     validate: '{{ item.1.validate | default(omit) }}'
   no_log: '{{ item.0.no_log | default(omit) }}'
   with_subelements:
@@ -198,11 +207,43 @@
     - flags:
       skip_missing: yes
 
+- name: 'Account | Configure templates.'
+  become: yes
+  template:
+    attributes : '{{ item.1.attributes | default(omit) }}'
+    backup: '{{ item.1.backup | default(omit) }}'
+    block_end_string: '{{ item.1.block_end_string | default(omit) }}'
+    block_start_string: '{{ item.1.block_start_string | default(omit) }}'
+    dest: '/home/{{ item.0.name }}/{{ item.1.dest }}'
+    follow: '{{ item.1.follow | default(omit) }}'
+    force: '{{ item.1.force | default(omit) }}'
+    group: '{{ item.1.group | default(item.0.group) }}'
+    mode: '{{ item.1.mode | default(omit) }}'
+    newline_sequence: '{{ item.1.newline_sequence | default(omit) }}'
+    owner: '{{ item.1.owner | default(item.0.name) }}'
+    selevel: '{{ item.1.selevel | default(omit) }}'
+    serole: '{{ item.1.serole | default(omit) }}'
+    setype: '{{ item.1.setype | default(omit) }}'
+    seuser: '{{ item.1.seuser | default(omit) }}'
+    src: '{{ item.1.src }}'
+    trim_blocks: '{{ item.1.trim_blocks | default(omit) }}'
+    unsafe_writes: '{{ item.1.unsafe_writes | default(omit) }}'
+    validate: '{{ item.1.validate | default(omit) }}'
+    variable_end_string: '{{ item.1.variable_end_string | default(omit) }}'
+    variable_start_string: '{{ item.1.variable_start_string | default(omit) }}'
+  no_log: '{{ item.0.no_log | default(omit) }}'
+  with_subelements:
+    - '{{ account_users }}'
+    - 'templates'
+    - flags:
+      skip_missing: yes
+
 - name: 'Account | Configure repositories.'
   become: yes
   become_user: '{{ item.1.become_user | default(omit) }}'
   git:
     accept_hostkey: '{{ item.1.accept_hostkey | default(omit) }}'
+    archive: '{{ item.1.archive | default(omit) }}'
     bare: '{{ item.1.bare | default(omit) }}'
     clone: '{{ item.1.clone | default(omit) }}'
     depth: '{{ item.1.depth | default(omit) }}'
@@ -233,6 +274,8 @@
   composer:
     arguments: '{{ item.1.arguments | default(omit) }}'
     command: '{{ item.1.command | default(omit) }}'
+    global_command: '{{ item.1.global_command | default(omit) }}'
+    executable: '{{ item.1.executable | default(omit) }}'
     ignore_platform_reqs: '{{ item.1.ignore_platform_reqs | default(omit) }}'
     no_dev: '{{ item.1.no_dev | default(omit) }}'
     no_plugins: '{{ item.1.no_plugins | default(omit) }}'
