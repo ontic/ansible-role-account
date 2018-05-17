@@ -225,7 +225,7 @@
     serole: '{{ item.1.serole | default(omit) }}'
     setype: '{{ item.1.setype | default(omit) }}'
     seuser: '{{ item.1.seuser | default(omit) }}'
-    src: '{{ item.1.src }}'
+    src: '{{ item.1.src | default(omit) }}'
     trim_blocks: '{{ item.1.trim_blocks | default(omit) }}'
     unsafe_writes: '{{ item.1.unsafe_writes | default(omit) }}'
     validate: '{{ item.1.validate | default(omit) }}'
